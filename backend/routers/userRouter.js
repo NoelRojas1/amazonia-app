@@ -13,7 +13,7 @@ const userRouter = express.Router();
 userRouter.get(
   "/seed",
   expressAsyncHandler(async (request, response) => {
-    // await User.remove({}); //This line of code will remove all users from database
+    await User.remove({}); //This line of code will remove all users from database
     const createdUsers = await User.insertMany(data.users);
     response.send({ createdUsers });
   })
