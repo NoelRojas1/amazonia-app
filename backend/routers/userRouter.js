@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import data from "../data.js";
 import User from "../models/userModel.js";
-import { generateToken, isAuth } from "../utils.js";
+import { generateToken, isAdmin, isAuth } from "../utils.js";
 
 const userRouter = express.Router();
 
@@ -13,7 +13,7 @@ const userRouter = express.Router();
 userRouter.get(
   "/seed",
   expressAsyncHandler(async (request, response) => {
-    await User.remove({}); //This line of code will remove all users from database
+    // await User.remove({}); //This line of code will remove all users from database
     const createdUsers = await User.insertMany(data.users);
     response.send({ createdUsers });
   })
@@ -101,6 +101,17 @@ userRouter.put(
     } else {
       response.status(404).send({ message: "User not Found" });
     }
+  })
+);
+
+//  Api to list users ---> returns all users in the collection
+userRouter.get(
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (request, response) => {
+    const users = await User.find({});
+    response.send(users);
   })
 );
 
