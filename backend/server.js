@@ -57,9 +57,16 @@ app.get("/api/config/paypal", (request, response) => {
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
-app.get("/", (request, response) => {
-  response.send("Server is ready");
-});
+//To show on live website heroku app
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.get("*", (request, response) =>
+  response.sendFile(path.join(__dirname, "/frontend/build/index.html"))
+);
+
+//After creating the build folder, this is not needed. Build folder was created by react when publiching to heroku
+// app.get("/", (request, response) => {
+//   response.send("Server is ready");
+// });
 
 //This middleware sends th error message to front end from express async handlers in the routers
 
