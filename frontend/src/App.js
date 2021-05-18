@@ -19,6 +19,7 @@ import SigninWindow from "./windows/SigninWindow";
 import ProductEditWindow from "./windows/ProductEditWindow";
 import OrderListWindow from "./windows/OrderListWindow";
 import UserListWindow from "./windows/UserListWindow";
+import UserEditWindow from "./windows/UserEditWindow";
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -127,6 +128,10 @@ function App() {
             component={OrderListWindow}
           ></AdminRoute>
           <AdminRoute path="/userlist" component={UserListWindow}></AdminRoute>
+          <AdminRoute
+            path="/user/:id/edit"
+            component={UserEditWindow}
+          ></AdminRoute>
         </main>
         <footer className="row center">
           <p>All rights reserved.</p>

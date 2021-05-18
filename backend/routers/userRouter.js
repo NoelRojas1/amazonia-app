@@ -115,4 +115,50 @@ userRouter.get(
   })
 );
 
+//Api to delete users
+userRouter.delete(
+  "/:id",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (request, response) => {
+    const user = await User.findById(request.params.id);
+    if (user) {
+      if (user.isAdmin) {
+        response.status(503).send({ message: "Cannot delete an Admin User" });
+      } else {
+        const deletedUser = await user.remove();
+        response.send({
+          message: "User deleted successfully",
+          user: deletedUser,
+        });
+      }
+    } else {
+      response.status(404).send({ message: "User not Found." });
+    }
+  })
+);
+
+//Api to update user information
+userRouter.put(
+  "/:id",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (request, response) => {
+    const user = await User.findById(request.params.id);
+    if (user) {
+      user.name = request.body.name || user.name;
+      user.email = request.body.email || user.email;
+      user.isSeller = request.body.isSeller || user.isSeller;
+      user.isAdmin = request.body.isAdmin || user.isAdmin;
+      const updatedUser = await user.save();
+      response.send({
+        message: "User Updated Successfully",
+        user: updatedUser,
+      });
+    } else {
+      response.status(404).send({ message: "User not Found" });
+    }
+  })
+);
+
 export default userRouter;
