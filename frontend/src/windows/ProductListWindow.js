@@ -13,6 +13,7 @@ import {
 } from "../constants/productConstants";
 
 export default function ProductListWindow(props) {
+  const sellerMode = props.match.path.indexOf("/seller") >= 0;
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
 
@@ -31,6 +32,9 @@ export default function ProductListWindow(props) {
     success: successDelete,
   } = deletedProduct;
 
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (successNewProduct) {
@@ -40,13 +44,15 @@ export default function ProductListWindow(props) {
     if (successDelete) {
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
-    dispatch(listProducts());
+    dispatch(listProducts({ seller: sellerMode ? userInfo._id : "" }));
   }, [
     dispatch,
     successNewProduct,
     createdProduct,
     props.history,
     successDelete,
+    sellerMode,
+    userInfo._id,
   ]);
 
   const deleteHandler = (product) => {

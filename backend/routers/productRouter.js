@@ -2,7 +2,7 @@ import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Product from "../models/productModel.js";
 import data from "../data.js";
-import { isAdmin, isAuth } from "../utils.js";
+import { isAdmin, isAuth, isSellerOrAdmin } from "../utils.js";
 
 const productRouter = express.Router();
 
@@ -10,8 +10,10 @@ const productRouter = express.Router();
 productRouter.get(
   "/",
   expressAsyncHandler(async (request, response) => {
-    //.find({}) means "return all products"
-    const products = await Product.find({});
+    const seller = request.query.seller || "";
+    const sellerFilter = seller ? { seller } : {};
+    //.find({}) means "return all products for the current admin or seller"
+    const products = await Product.find({ ...sellerFilter });
     response.send(products);
   })
 );
@@ -45,10 +47,11 @@ productRouter.get(
 productRouter.post(
   "/",
   isAuth,
-  isAdmin,
+  isSellerOrAdmin,
   expressAsyncHandler(async (request, response) => {
     const product = new Product({
       name: "sample name" + Date.now(),
+      seller: request.user._id,
       image: "../images/product-1.jpg",
       price: 0,
       category: "sample category",
@@ -67,7 +70,7 @@ productRouter.post(
 productRouter.put(
   "/:id",
   isAuth,
-  isAdmin,
+  isSellerOrAdmin,
   expressAsyncHandler(async (request, response) => {
     const productId = request.params.id;
     const product = await Product.findById(productId);

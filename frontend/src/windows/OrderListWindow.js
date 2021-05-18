@@ -6,6 +6,7 @@ import MessageBox from "../components/MessageBox";
 import { ORDER_DELETE_RESET } from "../constants/orderConstants";
 
 export default function OrderListWindow(props) {
+  const sellerMode = props.match.path.indexOf("/seller") >= 0;
   const orderList = useSelector((state) => state.orderList);
   const { loading, error, orders } = orderList;
 
@@ -16,13 +17,16 @@ export default function OrderListWindow(props) {
     success: successDelete,
   } = deletedOrder;
 
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
+
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(listOrders());
+    dispatch(listOrders({ seller: sellerMode ? userInfo._id : "" }));
     if (successDelete) {
       dispatch({ type: ORDER_DELETE_RESET });
     }
-  }, [dispatch, successDelete]);
+  }, [dispatch, successDelete, sellerMode, userInfo._id]);
 
   const deleteHandler = (order) => {
     //TODO: delete handler

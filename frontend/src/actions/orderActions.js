@@ -24,24 +24,26 @@ import {
   ORDER_DELIVER_FAIL,
 } from "../constants/orderConstants";
 
-export const listOrders = () => async (dispatch, getState) => {
-  dispatch({ type: ORDER_LIST_REQUEST });
-  const {
-    userSignin: { userInfo },
-  } = getState();
-  try {
-    const { data } = await Axios.get("/api/orders", {
-      headers: { Authorization: `Bearer ${userInfo.token}` },
-    });
-    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.message && error.response.data.message
-        ? error.resposne.data.message
-        : error.message;
-    dispatch({ type: ORDER_LIST_FAIL, payload: message });
-  }
-};
+export const listOrders =
+  ({ seller = "" }) =>
+  async (dispatch, getState) => {
+    dispatch({ type: ORDER_LIST_REQUEST });
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    try {
+      const { data } = await Axios.get(`/api/orders?seller=${seller}`, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
+      dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.message && error.response.data.message
+          ? error.resposne.data.message
+          : error.message;
+      dispatch({ type: ORDER_LIST_FAIL, payload: message });
+    }
+  };
 
 export const createOrder = (order) => async (dispatch, getState) => {
   dispatch({ type: ORDER_CREATE_REQUEST, payload: order });

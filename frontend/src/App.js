@@ -20,6 +20,7 @@ import ProductEditWindow from "./windows/ProductEditWindow";
 import OrderListWindow from "./windows/OrderListWindow";
 import UserListWindow from "./windows/UserListWindow";
 import UserEditWindow from "./windows/UserEditWindow";
+import SellerRoute from "./components/SellerRoute";
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -76,6 +77,21 @@ function App() {
             ) : (
               <Link to="/signin">Sign In</Link>
             )}
+            {userInfo && userInfo.isSeller && (
+              <div className="dropdown">
+                <Link to="#seller">
+                  Seller <i className="fa fa-caret-down"></i>
+                </Link>
+                <ul className="dropdown-content">
+                  <li>
+                    <Link to="/productlist/seller">Products</Link>
+                  </li>
+                  <li>
+                    <Link to="/orderlist/seller">Orders</Link>
+                  </li>
+                </ul>
+              </div>
+            )}
             {userInfo && userInfo.isAdmin && (
               <div className="dropdown">
                 <Link to="#admin">
@@ -122,16 +138,26 @@ function App() {
           <AdminRoute
             path="/productlist"
             component={ProductListWindow}
+            exact
           ></AdminRoute>
           <AdminRoute
             path="/orderlist"
             component={OrderListWindow}
+            exact
           ></AdminRoute>
           <AdminRoute path="/userlist" component={UserListWindow}></AdminRoute>
           <AdminRoute
             path="/user/:id/edit"
             component={UserEditWindow}
           ></AdminRoute>
+          <SellerRoute
+            path="/productlist/seller"
+            component={ProductListWindow}
+          ></SellerRoute>
+          <SellerRoute
+            path="/orderlist/seller"
+            component={OrderListWindow}
+          ></SellerRoute>
         </main>
         <footer className="row center">
           <p>All rights reserved.</p>

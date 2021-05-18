@@ -33,6 +33,7 @@ userRouter.post(
           name: user.name,
           email: user.email,
           isAdmin: user.isAdmin,
+          isSeller: user.isSeller,
           //To implement generateToken, you need to install "jsonwebtoken" in the root folder
           //Then implement it in a file named utils.js in backend folder
           token: generateToken(user),
@@ -60,6 +61,7 @@ userRouter.post(
       name: createdUser.name,
       email: createdUser.email,
       isAdmin: createdUser.isAdmin,
+      isSeller: user.isSeller,
       //To implement generateToken, you need to install "jsonwebtoken" in the root folder
       //Then implement it in a file named utils.js in backend folder
       token: generateToken(createdUser),
@@ -90,12 +92,19 @@ userRouter.put(
       if (request.body.password) {
         user.password = bcrypt.hashSync(request.body.password, 8);
       }
+      if (user.isSeller) {
+        user.seller.name = request.body.sellerName || user.seller.name;
+        user.seller.logo = request.body.sellerLogo || user.seller.logo;
+        user.seller.description =
+          request.body.sellerDescription || user.seller.description;
+      }
       const updatedUser = await user.save();
       response.send({
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
         isAdmin: updatedUser.isAdmin,
+        isSeller: user.isSeller,
         token: generateToken(updatedUser),
       });
     } else {

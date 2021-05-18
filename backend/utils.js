@@ -7,6 +7,7 @@ export const generateToken = (user) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isSeller: user.isSeller,
     },
     //to implement this part (secure token), you need to create a .env file in the root folder, and install a package called "dotenv"
     process.env.JWT_SECRET || "somethingsecret",
@@ -36,11 +37,29 @@ export const isAuth = (request, response, next) => {
   }
 };
 
-//Middleware to autheticate admin users.
+//Middleware to authenticate admin users.
 export const isAdmin = (request, response, next) => {
   if (request.user && request.user.isAdmin) {
     next();
   } else {
     response.status(401).send({ message: "Invalid Admin Token" });
+  }
+};
+
+//Middleware to autehnticate seller users
+export const isSeller = (request, response, next) => {
+  if (request.user && request.user.isSeller) {
+    next();
+  } else {
+    response.status(401).send({ message: "Invalid Seller Token" });
+  }
+};
+
+//Middleware to autehnticate seller or admin  users
+export const isSellerOrAdmin = (request, response, next) => {
+  if (request.user && (request.user.isSeller || request.user.isAdmin)) {
+    next();
+  } else {
+    response.status(401).send({ message: "Invalid Admin/Seller Token" });
   }
 };

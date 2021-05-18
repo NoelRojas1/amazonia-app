@@ -1,7 +1,7 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
-import { isAdmin, isAuth } from "../utils.js";
+import { isAdmin, isAuth, isSellerOrAdmin } from "../utils.js";
 
 const orderRouter = express.Router();
 
@@ -9,9 +9,14 @@ const orderRouter = express.Router();
 orderRouter.get(
   "/",
   isAuth,
-  isAdmin,
+  isSellerOrAdmin,
   expressAsyncHandler(async (request, response) => {
-    const orders = await Order.find({}).populate("user", "name"); // --> the function .populate works like "join" in sql
+    const seller = request.query.seller || "";
+    const sellerFilter = seller ? { seller } : {};
+    const orders = await Order.find({ ...sellerFilter }).populate(
+      "user",
+      "name"
+    ); // --> the function .populate works like "join" in sql
     response.send(orders);
   })
 );
@@ -42,6 +47,7 @@ orderRouter.post(
         taxPrice: request.body.taxPrice,
         totalPrice: request.body.totalPrice,
         user: request.user._id,
+        seller: request.body.orderItems[0].seller,
       });
       const createdOrder = await order.save();
       response
