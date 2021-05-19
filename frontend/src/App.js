@@ -21,6 +21,7 @@ import OrderListWindow from "./windows/OrderListWindow";
 import UserListWindow from "./windows/UserListWindow";
 import UserEditWindow from "./windows/UserEditWindow";
 import SellerRoute from "./components/SellerRoute";
+import SellerWindow from "./windows/SellerWindow";
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -116,6 +117,7 @@ function App() {
           </div>
         </header>
         <main>
+          <Route path="/seller/:id" component={SellerWindow}></Route>
           <Route path="/" component={HomeWindow} exact></Route>
           <Route path="/product/:id" component={ProductWindow} exact></Route>
           <Route

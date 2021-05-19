@@ -16,6 +16,7 @@ export default function ProfileWindow() {
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
+
   const userDetails = useSelector((state) => state.userDetails);
   const { user, loading, error } = userDetails;
 

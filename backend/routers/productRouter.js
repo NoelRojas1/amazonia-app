@@ -13,7 +13,10 @@ productRouter.get(
     const seller = request.query.seller || "";
     const sellerFilter = seller ? { seller } : {};
     //.find({}) means "return all products for the current admin or seller"
-    const products = await Product.find({ ...sellerFilter });
+    const products = await Product.find({ ...sellerFilter }).populate(
+      "seller",
+      "seller.name seller.logo"
+    );
     response.send(products);
   })
 );
@@ -33,7 +36,10 @@ productRouter.get(
 productRouter.get(
   "/:id",
   expressAsyncHandler(async (request, response) => {
-    const product = await Product.findById(request.params.id);
+    const product = await Product.findById(request.params.id).populate(
+      "seller",
+      "seller.name seller.logo seller.rating seller.numReviews"
+    );
 
     if (product) {
       response.send(product);

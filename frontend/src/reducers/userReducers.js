@@ -65,7 +65,7 @@ export const userSigninReducer = (state = {}, action) => {
 export const userDetailsReducer = (state = { loading: true }, action) => {
   switch (action.type) {
     case USER_DETAILS_REQUEST:
-      return { laoding: true };
+      return { loading: true };
 
     case USER_DETAILS_SUCCESS:
       return { loading: false, user: action.payload };
@@ -74,7 +74,7 @@ export const userDetailsReducer = (state = { loading: true }, action) => {
       return { loading: false, error: action.payload };
 
     case USER_DETAILS_RESET:
-      return { laoding: true };
+      return { loading: true };
 
     default:
       return state;
