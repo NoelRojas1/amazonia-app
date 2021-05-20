@@ -7,7 +7,7 @@ import MessageBox from "../components/MessageBox";
 export default function CartWindow(props) {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const { cartItems, error } = cart;
   const productId = props.match.params.id;
   const qty = props.location.search
     ? Number(props.location.search.split("=")[1])
@@ -33,6 +33,7 @@ export default function CartWindow(props) {
     <div className="row top">
       <div className="col-2">
         <hi>Shopping Cart</hi>
+        {error && <MessageBox variant="danger">{error}</MessageBox>}
         {cartItems.length === 0 ? (
           <MessageBox>
             Cart is empty. <Link to="/">Go shopping</Link>

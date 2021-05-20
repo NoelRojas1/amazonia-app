@@ -1,5 +1,6 @@
 import {
   CART_ADD_ITEM,
+  CART_ADD_ITEM_FAIL,
   CART_EMPTY,
   CART_ITEM_DELETE,
   CART_SAVE_PAYMENT_METHOD,
@@ -14,18 +15,23 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
       if (existItem) {
         return {
           ...state,
+          error: "",
           cartItems: state.cartItems.map((x) =>
             x.product === existItem.product ? item : x
           ),
         };
       } else {
-        return { ...state, cartItems: [...state.cartItems, item] };
+        return { ...state, error: "", cartItems: [...state.cartItems, item] };
       }
+
+    case CART_ADD_ITEM_FAIL:
+      return { ...state, error: action.payload };
 
     case CART_ITEM_DELETE:
       // (...state) is used when no other properties need to be changed
       return {
         ...state,
+        error: "",
         //filter out the product whose id it the same as action.payload
         cartItems: state.cartItems.filter((x) => x.product !== action.payload),
       };
@@ -45,6 +51,7 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
     case CART_EMPTY:
       return {
         ...state,
+        error: "",
         cartItems: [],
       };
 
