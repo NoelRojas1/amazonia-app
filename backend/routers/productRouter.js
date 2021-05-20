@@ -11,15 +11,27 @@ productRouter.get(
   "/",
   expressAsyncHandler(async (request, response) => {
     const name = request.query.name || "";
+    const category = request.query.category || "";
     const seller = request.query.seller || "";
     const nameFilter = name ? { name: { $regex: name, $options: "i" } } : {};
     const sellerFilter = seller ? { seller } : {};
+    const categoryFilter = category ? { category } : {};
     //.find({}) means "return all products for the current admin or seller"
     const products = await Product.find({
       ...sellerFilter,
       ...nameFilter,
+      ...categoryFilter,
     }).populate("seller", "seller.name seller.logo");
     response.send(products);
+  })
+);
+
+//Api to get the product categories
+productRouter.get(
+  "/categories",
+  expressAsyncHandler(async (request, response) => {
+    const categories = await Product.find().distinct("category");
+    response.send(categories);
   })
 );
 

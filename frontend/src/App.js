@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Link, Route } from "react-router-dom";
 import { signout } from "./actions/userActions";
@@ -24,23 +24,41 @@ import SellerRoute from "./components/SellerRoute";
 import SellerWindow from "./windows/SellerWindow";
 import SearchBox from "./components/SearchBox";
 import SearchWindow from "./windows/SearchWindow";
+import { listProductCategories } from "./actions/productActions";
+import LoadingBox from "./components/LoadingBox";
+import MessageBox from "./components/MessageBox";
 
 function App() {
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
 
+  const productCategoryList = useSelector((state) => state.productCategoryList);
+  const { loading, error, categories } = productCategoryList;
+  console.log(categories);
   const dispatch = useDispatch();
   const signoutHandler = () => {
     dispatch(signout());
   };
+
+  useEffect(() => {
+    dispatch(listProductCategories());
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
       <div className="grid-container">
         <header className="row">
           <div>
+            <button
+              type="button"
+              className="open-sidebar"
+              onClick={() => setSidebarIsOpen(true)}
+            >
+              <i className="fa fa-bars"></i>
+            </button>
             <Link className="brand" to="/">
               amazonia
             </Link>
@@ -126,6 +144,37 @@ function App() {
             )}
           </div>
         </header>
+        <aside className={sidebarIsOpen ? "open" : ""}>
+          <ul className="categories">
+            <li>
+              <strong>Categories</strong>
+              <button
+                onClick={() => setSidebarIsOpen(false)}
+                className="close-sidebar"
+                type="button"
+              >
+                <i className="fa fa-close"></i>
+              </button>
+            </li>
+            {loading ? (
+              <LoadingBox></LoadingBox>
+            ) : error ? (
+              <MessageBox variant="danger">{error}</MessageBox>
+            ) : (
+              categories !== undefined &&
+              categories.map((c) => (
+                <li key={c}>
+                  <Link
+                    to={`/search/category/${c}`}
+                    onClick={() => setSidebarIsOpen(false)}
+                  >
+                    {c}
+                  </Link>
+                </li>
+              ))
+            )}
+          </ul>
+        </aside>
         <main>
           <Route path="/seller/:id" component={SellerWindow}></Route>
           <Route path="/" component={HomeWindow} exact></Route>
@@ -145,6 +194,16 @@ function App() {
           <Route path="/orderhistory" component={OrderHistoryWindow}></Route>
           <Route
             path="/search/name/:name?"
+            component={SearchWindow}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category"
+            component={SearchWindow}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category/name/:name"
             component={SearchWindow}
             exact
           ></Route>

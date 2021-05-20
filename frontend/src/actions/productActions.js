@@ -15,17 +15,20 @@ import {
   PRODUCT_UPDATE_REQUEST,
   PRODUCT_UPDATE_SUCCESS,
   PRODUCT_UPDATE_FAIL,
+  PRODUCT_CATEGORIES_REQUEST,
+  PRODUCT_CATEGORIES_FAIL,
+  PRODUCT_CATEGORIES_SUCCESS,
 } from "../constants/productConstants";
 
 export const listProducts =
-  ({ seller = "", name = "" }) =>
+  ({ seller = "", name = "", category = "" }) =>
   async (dispatch) => {
     dispatch({
       type: PRODUCT_LIST_REQUEST,
     });
     try {
       const { data } = await Axios.get(
-        `/api/products?seller=${seller}&name=${name}`
+        `/api/products?seller=${seller}&name=${name}&category=${category}`
       );
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -95,11 +98,11 @@ export const updateProduct = (productData) => async (dispatch, useState) => {
   }
 };
 
-export const deleteProduct = (productId) => async (dispatch, useState) => {
+export const deleteProduct = (productId) => async (dispatch, getState) => {
   dispatch({ type: PRODUCT_DELETE_REQUEST, payload: productId });
   const {
     userSignin: { userInfo },
-  } = useState();
+  } = getState();
   try {
     const { data } = await Axios.delete(`/api/products/${productId}`, {
       headers: {
@@ -113,5 +116,20 @@ export const deleteProduct = (productId) => async (dispatch, useState) => {
         ? error.response.data.message
         : error.message;
     dispatch({ type: PRODUCT_DELETE_FAIL, error: message });
+  }
+};
+
+export const listProductCategories = () => async (dispatch) => {
+  dispatch({ type: PRODUCT_CATEGORIES_REQUEST });
+  try {
+    const { data } = await Axios.get(`/api/products/categories`);
+    dispatch({ type: PRODUCT_CATEGORIES_SUCCESS, paylaod: data });
+    console.log(data);
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: PRODUCT_CATEGORIES_FAIL, error: message });
   }
 };

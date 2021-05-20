@@ -1,4 +1,7 @@
 import {
+  PRODUCT_CATEGORIES_FAIL,
+  PRODUCT_CATEGORIES_REQUEST,
+  PRODUCT_CATEGORIES_SUCCESS,
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQUEST,
   PRODUCT_CREATE_RESET,
@@ -29,6 +32,22 @@ export const productListReducer = (
     case PRODUCT_LIST_SUCCESS:
       return { loading: false, products: action.payload };
     case PRODUCT_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const productCategoriesReducer = (
+  state = { loading: true, categories: [] },
+  action
+) => {
+  switch (action.type) {
+    case PRODUCT_CATEGORIES_REQUEST:
+      return { loading: true };
+    case PRODUCT_CATEGORIES_SUCCESS:
+      return { loading: false, categories: action.payload };
+    case PRODUCT_CATEGORIES_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
