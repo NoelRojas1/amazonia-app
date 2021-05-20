@@ -10,6 +10,17 @@ const userRouter = express.Router();
 //Express Async Handler takes care of the loading issue when there are multiple users trying to use the same email and this code ius run.
 //This will show the error message on the screen
 
+//Api for list of top sellers
+userRouter.get(
+  "/top-sellers",
+  expressAsyncHandler(async (request, response) => {
+    const topSellers = await User.find({ isSeller: true })
+      .sort({ "seller.rating": -1 })
+      .limit(2);
+    response.send(topSellers);
+  })
+);
+
 userRouter.get(
   "/seed",
   expressAsyncHandler(async (request, response) => {

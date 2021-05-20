@@ -339,3 +339,12 @@ img.large {
 .table button {
   margin: 0 0.2rem;
 }
+
+/* Carousel */
+.carousel {
+  background-color: #000;
+}
+
+.carousel .slide img {
+  max-width: 30rem;
+}
