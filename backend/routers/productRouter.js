@@ -10,13 +10,15 @@ const productRouter = express.Router();
 productRouter.get(
   "/",
   expressAsyncHandler(async (request, response) => {
+    const name = request.query.name || "";
     const seller = request.query.seller || "";
+    const nameFilter = name ? { name: { $regex: name, $options: "i" } } : {};
     const sellerFilter = seller ? { seller } : {};
     //.find({}) means "return all products for the current admin or seller"
-    const products = await Product.find({ ...sellerFilter }).populate(
-      "seller",
-      "seller.name seller.logo"
-    );
+    const products = await Product.find({
+      ...sellerFilter,
+      ...nameFilter,
+    }).populate("seller", "seller.name seller.logo");
     response.send(products);
   })
 );

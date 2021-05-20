@@ -22,6 +22,8 @@ import UserListWindow from "./windows/UserListWindow";
 import UserEditWindow from "./windows/UserEditWindow";
 import SellerRoute from "./components/SellerRoute";
 import SellerWindow from "./windows/SellerWindow";
+import SearchBox from "./components/SearchBox";
+import SearchWindow from "./windows/SearchWindow";
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -42,6 +44,14 @@ function App() {
             <Link className="brand" to="/">
               amazonia
             </Link>
+          </div>
+          <div>
+            {/* Pass react-dom properties to the seacrh box using the render function */}
+            <Route
+              render={({ history }) => (
+                <SearchBox history={history}></SearchBox>
+              )}
+            ></Route>
           </div>
           <div>
             <Link to="/cart">
@@ -133,6 +143,11 @@ function App() {
           <Route path="/placeorder" component={PlaceOrderWindow}></Route>
           <Route path="/order/:id" component={OrderDetailWindow}></Route>
           <Route path="/orderhistory" component={OrderHistoryWindow}></Route>
+          <Route
+            path="/search/name/:name?"
+            component={SearchWindow}
+            exact
+          ></Route>
           <PrivateRoute
             path="/profile"
             component={ProfileWindow}

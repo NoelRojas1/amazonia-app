@@ -15,6 +15,8 @@ export default function SellerWindow(props) {
 
   const userDetails = useSelector((state) => state.userDetails);
   const { user, loading, error } = userDetails;
+  console.log(user);
+  // console.log(user.seller.logo);
 
   const productList = useSelector((state) => state.productList);
   const {

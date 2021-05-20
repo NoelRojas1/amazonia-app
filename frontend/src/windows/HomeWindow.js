@@ -24,6 +24,7 @@ export default function HomeWindow() {
     error: errorTopSellers,
     users: sellers,
   } = topSellerList;
+  // console.log(sellers);
 
   useEffect(() => {
     // const fetchData = async () => {
@@ -71,7 +72,7 @@ export default function HomeWindow() {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <>
-          {products.length === 0 && <MessageBox>No Seller Found</MessageBox>}
+          {products.length === 0 && <MessageBox>No Products Found</MessageBox>}
           <div className="row center">
             {products.map((product) => (
               <Product key={product._id} product={product}></Product>
