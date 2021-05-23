@@ -44,8 +44,8 @@ export default function SellerWindow(props) {
               <div className="row start">
                 <div className="p-1">
                   <img
-                    className="small"
-                    scr={user.seller.logo}
+                    className="medium"
+                    src={user.seller.logo}
                     alt={user.seller.name}
                   ></img>
                 </div>

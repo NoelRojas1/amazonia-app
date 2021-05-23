@@ -21,14 +21,22 @@ import {
 } from "../constants/productConstants";
 
 export const listProducts =
-  ({ seller = "", name = "", category = "" }) =>
+  ({
+    seller = "",
+    name = "",
+    category = "",
+    min = 0,
+    max = 0,
+    rating = 0,
+    order = "",
+  }) =>
   async (dispatch) => {
     dispatch({
       type: PRODUCT_LIST_REQUEST,
     });
     try {
       const { data } = await Axios.get(
-        `/api/products?seller=${seller}&name=${name}&category=${category}`
+        `/api/products?seller=${seller}&name=${name}&category=${category}&min=${min}&max=${max}&rating=${rating}&order=${order}`
       );
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -71,12 +79,12 @@ export const createProduct = () => async (dispatch, getState) => {
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    dispatch({ type: PRODUCT_CREATE_FAIL, paylaod: message });
+    dispatch({ type: PRODUCT_CREATE_FAIL, payload: message });
   }
 };
 
 export const updateProduct = (productData) => async (dispatch, useState) => {
-  dispatch({ type: PRODUCT_UPDATE_REQUEST, paylaod: productData });
+  dispatch({ type: PRODUCT_UPDATE_REQUEST, payload: productData });
   const {
     userSignin: { userInfo },
   } = useState();
@@ -109,7 +117,7 @@ export const deleteProduct = (productId) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     });
-    dispatch({ type: PRODUCT_DELETE_SUCCESS, paylaod: data });
+    dispatch({ type: PRODUCT_DELETE_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -123,7 +131,7 @@ export const listProductCategories = () => async (dispatch) => {
   dispatch({ type: PRODUCT_CATEGORIES_REQUEST });
   try {
     const { data } = await Axios.get(`/api/products/categories`);
-    dispatch({ type: PRODUCT_CATEGORIES_SUCCESS, paylaod: data });
+    dispatch({ type: PRODUCT_CATEGORIES_SUCCESS, payload: data });
     console.log(data);
   } catch (error) {
     const message =

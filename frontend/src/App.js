@@ -207,6 +207,26 @@ function App() {
             component={SearchWindow}
             exact
           ></Route>
+          <Route
+            path="/search/category/:category/name/:name/min/:min"
+            component={SearchWindow}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category/name/:name/min/:min/max/:max"
+            component={SearchWindow}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category/name/:name/min/:min/max/:max/rating/:rating"
+            component={SearchWindow}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category/name/:name/min/:min/max/:max/rating/:rating/order/:order"
+            component={SearchWindow}
+            exact
+          ></Route>
           <PrivateRoute
             path="/profile"
             component={ProfileWindow}
