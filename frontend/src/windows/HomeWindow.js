@@ -24,7 +24,6 @@ export default function HomeWindow() {
     error: errorTopSellers,
     users: sellers,
   } = topSellerList;
-  // console.log(sellers);
 
   useEffect(() => {
     // const fetchData = async () => {

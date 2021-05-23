@@ -5,6 +5,10 @@ import {
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQUEST,
   PRODUCT_CREATE_RESET,
+  PRODUCT_CREATE_REVIEW_FAIL,
+  PRODUCT_CREATE_REVIEW_REQUEST,
+  PRODUCT_CREATE_REVIEW_RESET,
+  PRODUCT_CREATE_REVIEW_SUCCESS,
   PRODUCT_CREATE_SUCCESS,
   PRODUCT_DELETE_FAIL,
   PRODUCT_DELETE_REQUEST,
@@ -114,9 +118,28 @@ export const productDeleteReducer = (state = {}, action) => {
       return { loading: false, success: true };
 
     case PRODUCT_DELETE_FAIL:
-      return { loading: false, success: true, error: action.payload };
+      return { loading: false, success: true, error: action.error };
 
     case PRODUCT_DELETE_RESET:
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+export const productCreateReviewReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_CREATE_REVIEW_REQUEST:
+      return { loading: true };
+
+    case PRODUCT_CREATE_REVIEW_SUCCESS:
+      return { loading: false, success: true, review: action.payload };
+
+    case PRODUCT_CREATE_REVIEW_FAIL:
+      return { loading: false, success: false, error: action.error };
+
+    case PRODUCT_CREATE_REVIEW_RESET:
       return {};
 
     default:

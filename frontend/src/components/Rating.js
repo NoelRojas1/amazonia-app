@@ -61,7 +61,7 @@ export default function Rating(props) {
           ></i>
         </span>
         {caption ? (
-          <apan>{caption}</apan>
+          <span>{caption}</span>
         ) : (
           <span>{`${numReviews}  reviews`}</span>
         )}

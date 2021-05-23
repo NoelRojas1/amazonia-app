@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { detailsProduct } from "../actions/productActions";
+import { createReview, detailsProduct } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import Rating from "../components/Rating";
+import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 // import data from '../data';
 
 export default function ProductWindow(props) {
@@ -12,18 +13,47 @@ export default function ProductWindow(props) {
   const dispatch = useDispatch();
   const productId = props.match.params.id; //To obtain the productId from user
   const [qty, setQty] = useState(1);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
+  const reviewCreate = useSelector((state) => state.productCreateReview);
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+  } = reviewCreate;
 
   useEffect(() => {
+    if (successCreate) {
+      window.alert("Review Submitted Successfully");
+      setRating("");
+      setComment("");
+      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
+    }
+
     dispatch(detailsProduct(productId));
-  }, [dispatch, productId]);
+  }, [dispatch, productId, successCreate]);
 
   // if(!product) {
   //     return <div>Product not found</div>
   // }
   const addToCartHandler = () => {
     props.history.push(`/cart/${productId}?qty=${qty}`);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    if (comment && rating) {
+      dispatch(
+        createReview(productId, { rating, comment, name: userInfo.name })
+      );
+    } else {
+      alert("Please enter rating and comment");
+    }
   };
 
   return (
@@ -130,6 +160,70 @@ export default function ProductWindow(props) {
                 </ul>
               </div>
             </div>
+          </div>
+          <div>
+            <h2 id="reviews">Reviews</h2>
+            {product.reviews.length === 0 && (
+              <MessageBox>There is no reviews</MessageBox>
+            )}
+            <ul>
+              {product.reviews.map((r) => (
+                <li key={r._id}>
+                  <strong>{r.name}</strong>
+                  <Rating rating={r.rating} caption=" "></Rating>
+                  <p>{r.createdAt.substring(0, 10)}</p>
+                  <p>{r.comment}</p>
+                </li>
+              ))}
+              <li>
+                {userInfo ? (
+                  <form className="form" onSubmit={submitHandler}>
+                    <div>
+                      <h2>Write a customer review</h2>
+                    </div>
+                    <div>
+                      <label htmlFor="rating">Rating</label>
+                      <select
+                        id="rating"
+                        value={rating}
+                        onChange={(e) => setRating(e.target.value)}
+                      >
+                        <option value="">Select...</option>
+                        <option value="1">1 - Poor</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="3">3 - Good</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="5">5 - Excellent</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="comment">Comment</label>
+                      <textarea
+                        id="comment"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      ></textarea>
+                    </div>
+                    <div>
+                      <label />
+                      <button className="primary" type="submit">
+                        Submit
+                      </button>
+                    </div>
+                    <div>
+                      {loadingCreate && <LoadingBox></LoadingBox>}
+                      {errorCreate && (
+                        <MessageBox variant="danger">{errorCreate}</MessageBox>
+                      )}
+                    </div>
+                  </form>
+                ) : (
+                  <MessageBox>
+                    Please <Link to="/signin">Sign in</Link> to write a review.
+                  </MessageBox>
+                )}
+              </li>
+            </ul>
           </div>
         </div>
       )}
