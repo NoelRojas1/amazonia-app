@@ -49,8 +49,14 @@ app.use("/api/products", productRouter);
 //Api for orders
 app.use("/api/orders", orderRouter);
 
+//Api for paypal client id
 app.get("/api/config/paypal", (request, response) => {
   response.send(process.env.PAYPAL_CLIENT_ID || "sb"); //sb == > sandbox
+});
+
+//Api for google maps
+app.get("/api/config/google", (request, response) => {
+  response.send(process.env.GOOGLE_API_KEY || "");
 });
 
 //To show images in the front-end/browser

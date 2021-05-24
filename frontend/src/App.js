@@ -27,6 +27,7 @@ import SearchWindow from "./windows/SearchWindow";
 import { listProductCategories } from "./actions/productActions";
 import LoadingBox from "./components/LoadingBox";
 import MessageBox from "./components/MessageBox";
+import MapWindow from "./windows/MapWindow";
 
 function App() {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -231,6 +232,7 @@ function App() {
             path="/profile"
             component={ProfileWindow}
           ></PrivateRoute>
+          <PrivateRoute path="/map" component={MapWindow}></PrivateRoute>
           <AdminRoute
             path="/productlist"
             component={ProductListWindow}

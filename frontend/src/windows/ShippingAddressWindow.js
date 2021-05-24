@@ -6,8 +6,16 @@ import CheckoutSteps from "../components/CheckoutSteps";
 export default function ShippingAddressWindow(props) {
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
+
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
+
+  const [lat, setLat] = useState(shippingAddress.lat);
+  const [lng, setLng] = useState(shippingAddress.lng);
+
+  const userAddressMap = useSelector((state) => state.userAddressMap);
+  const { address: addressMap } = userAddressMap;
+
   if (!userInfo) {
     props.history.push("/signin");
   }
@@ -24,11 +32,49 @@ export default function ShippingAddressWindow(props) {
   const submitHandler = (e) => {
     e.preventDefault();
 
+    const newLat = addressMap ? addressMap.lat : lat;
+    const newLng = addressMap ? addressMap.lng : lng;
+    if (addressMap) {
+      setLat(addressMap.lat);
+      setLng(addressMap.lng);
+    }
+    let moveOn = true;
+    if (!newLat || !newLng) {
+      moveOn = window.confirm(
+        "You did not choose your location on the map. Do you want to continue?"
+      );
+    }
+
     //TODO: Handler event... Dispatch save shipping address action
+    if (moveOn) {
+      dispatch(
+        saveShippingAddress({
+          fullName,
+          address,
+          city,
+          zipCode,
+          country,
+          lat: newLat,
+          lng: newLng,
+        })
+      );
+      props.history.push("/payment");
+    }
+  };
+
+  const chooseOnMap = () => {
     dispatch(
-      saveShippingAddress({ fullName, address, city, zipCode, country })
+      saveShippingAddress({
+        fullName,
+        address,
+        city,
+        zipCode,
+        country,
+        lat,
+        lng,
+      })
     );
-    props.history.push("/payment");
+    props.history.push("/map");
   };
 
   return (
@@ -96,16 +142,12 @@ export default function ShippingAddressWindow(props) {
               onChange={(e) => setCountry(e.target.value)}
             ></input>
           </div>
-          {/* <div>
-            <lable htmlFor="location">Location</lable>
-            <input
-              type="text"
-              id="location"
-              placeholder="Enter full name"
-              required
-              onChange={(e) => setLocation(e.target.value)}
-            ></input>
-          </div> */}
+          <div>
+            <lable htmlFor="chooseOnMap">Location</lable>
+            <button type="button" id="chooseOnMap" onClick={chooseOnMap}>
+              Choose On Map
+            </button>
+          </div>
           <div>
             <label />
             <button className="primary" type="submit">
