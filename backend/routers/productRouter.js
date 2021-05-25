@@ -10,6 +10,10 @@ const productRouter = express.Router();
 productRouter.get(
   "/",
   expressAsyncHandler(async (request, response) => {
+    //To implement pagination
+    const pageSize = 6;
+    const page = Number(request.query.pageNumber) || 1;
+
     const name = request.query.name || "";
     const category = request.query.category || "";
     const seller = request.query.seller || "";
@@ -43,6 +47,14 @@ productRouter.get(
         ? { rating: -1 }
         : { _id: -1 };
 
+    const count = await Product.count({
+      ...sellerFilter,
+      ...nameFilter,
+      ...categoryFilter,
+      ...priceFilter,
+      ...ratingFilter,
+    });
+
     const products = await Product.find({
       ...sellerFilter,
       ...nameFilter,
@@ -51,8 +63,10 @@ productRouter.get(
       ...ratingFilter,
     })
       .populate("seller", "seller.name seller.logo")
-      .sort(sortOrder);
-    response.send(products);
+      .sort(sortOrder)
+      .skip(pageSize * (page - 1)) //For pagination
+      .limit(pageSize); //For pagination
+    response.send({ products, page, pages: Math.ceil(count / pageSize) });
   })
 );
 
@@ -71,8 +85,19 @@ productRouter.get(
   "/seed",
   expressAsyncHandler(async (resquest, response) => {
     // await Product.remove({});
-    const createdProducts = await Product.insertMany(data.products);
-    response.send({ createdProducts });
+    const seller = await User.findOne({ isSeller: true });
+    if (seller) {
+      const products = data.products.map((product, index) => ({
+        ...product,
+        seller: seller._id,
+      }));
+      const createdProducts = await Product.insertMany(data.products);
+      response.send({ createdProducts });
+    } else {
+      response
+        .status(500)
+        .send({ message: "No seller found. First run /api/users/seed" });
+    }
   })
 );
 

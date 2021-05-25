@@ -168,8 +168,8 @@ userRouter.put(
     if (user) {
       user.name = request.body.name || user.name;
       user.email = request.body.email || user.email;
-      user.isSeller = request.body.isSeller || user.isSeller;
-      user.isAdmin = request.body.isAdmin || user.isAdmin;
+      user.isSeller = Boolean(request.body.isSeller);
+      user.isAdmin = Boolean(request.body.isAdmin);
       const updatedUser = await user.save();
       response.send({
         message: "User Updated Successfully",

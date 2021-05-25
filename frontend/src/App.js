@@ -179,6 +179,11 @@ function App() {
         <main>
           <Route path="/seller/:id" component={SellerWindow}></Route>
           <Route path="/" component={HomeWindow} exact></Route>
+          <Route
+            path="/pageNumber/:pageNumber"
+            component={HomeWindow}
+            exact
+          ></Route>
           <Route path="/product/:id" component={ProductWindow} exact></Route>
           <Route
             path="/product/:id/edit"
@@ -228,6 +233,11 @@ function App() {
             component={SearchWindow}
             exact
           ></Route>
+          <Route
+            path="/search/category/:category/name/:name/min/:min/max/:max/rating/:rating/order/:order/pageNumber/:pageNumber"
+            component={SearchWindow}
+            exact
+          ></Route>
           <PrivateRoute
             path="/profile"
             component={ProfileWindow}
@@ -235,6 +245,11 @@ function App() {
           <PrivateRoute path="/map" component={MapWindow}></PrivateRoute>
           <AdminRoute
             path="/productlist"
+            component={ProductListWindow}
+            exact
+          ></AdminRoute>
+          <AdminRoute
+            path="/productlist/pageNumber/:pageNumber"
             component={ProductListWindow}
             exact
           ></AdminRoute>
