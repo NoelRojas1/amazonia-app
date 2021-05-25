@@ -47,7 +47,7 @@ productRouter.get(
         ? { rating: -1 }
         : { _id: -1 };
 
-    const count = await Product.count({
+    const count = await Product.countDocuments({
       ...sellerFilter,
       ...nameFilter,
       ...categoryFilter,
