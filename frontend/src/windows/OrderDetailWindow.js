@@ -125,7 +125,7 @@ export default function OrderDetailWindow(props) {
                   {order.paymentMethod}
                 </p>
                 {order.isPaid ? (
-                  <MessageBox varient="success">
+                  <MessageBox variant="success">
                     Paid on {order.paidAt}
                   </MessageBox>
                 ) : (

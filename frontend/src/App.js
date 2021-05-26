@@ -28,6 +28,7 @@ import { listProductCategories } from "./actions/productActions";
 import LoadingBox from "./components/LoadingBox";
 import MessageBox from "./components/MessageBox";
 import MapWindow from "./windows/MapWindow";
+import DashboardWindow from "./windows/DashboardWindow";
 
 function App() {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -262,6 +263,10 @@ function App() {
           <AdminRoute
             path="/user/:id/edit"
             component={UserEditWindow}
+          ></AdminRoute>
+          <AdminRoute
+            path="/dashboard"
+            component={DashboardWindow}
           ></AdminRoute>
           <SellerRoute
             path="/productlist/seller"
