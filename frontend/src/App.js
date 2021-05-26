@@ -29,6 +29,8 @@ import LoadingBox from "./components/LoadingBox";
 import MessageBox from "./components/MessageBox";
 import MapWindow from "./windows/MapWindow";
 import DashboardWindow from "./windows/DashboardWindow";
+import SupportWindow from "./windows/SupportWindow";
+import ChatBox from "./components/ChatBox";
 
 function App() {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -140,6 +142,9 @@ function App() {
                   </li>
                   <li>
                     <Link to="/userlist">Users</Link>
+                  </li>
+                  <li>
+                    <Link to="/support">Supoprt</Link>
                   </li>
                 </ul>
               </div>
@@ -268,6 +273,7 @@ function App() {
             path="/dashboard"
             component={DashboardWindow}
           ></AdminRoute>
+          <AdminRoute path="/support" component={SupportWindow}></AdminRoute>
           <SellerRoute
             path="/productlist/seller"
             component={ProductListWindow}
@@ -278,7 +284,10 @@ function App() {
           ></SellerRoute>
         </main>
         <footer className="row center">
-          <p>All rights reserved.</p>
+          {userInfo && !userInfo.isAdmin && <ChatBox userInfo={userInfo} />}
+          <div>
+            <p>All rights reserved.</p>
+          </div>
         </footer>
       </div>
     </BrowserRouter>

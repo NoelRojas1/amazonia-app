@@ -48,14 +48,14 @@ export default function DashboardWindow() {
             <li>
               <div className="summary-title color3">
                 <span>
-                  <i className="fa fa-money"></i>&nbsp;Orders
+                  <i className="fa fa-money"></i>&nbsp;Sales
                 </span>
               </div>
               <div className="summary-body">
                 $
                 {summary.orders[0]
                   ? summary.orders[0].totalSales.toFixed(2)
-                  : 0}
+                  : 0.0}
               </div>
             </li>
           </ul>
