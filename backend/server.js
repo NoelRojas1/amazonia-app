@@ -1,7 +1,7 @@
-import http from "http";
-// import { createServer } from "http";
-import { Server } from "socket.io";
-// import * as socketio from "socket.io";
+// import http from "http";
+import { createServer } from "http";
+// import { Server } from "socket.io";
+import * as socketio from "socket.io";
 import express from "express";
 import mongoose from "mongoose";
 // The extensention .js needs to be appended in the backend as opposed to not needing it in frontend folder files
@@ -86,10 +86,10 @@ app.use((error, request, response, next) => {
 
 const port = process.env.PORT || 5000;
 
-const httpServer = http.Server(app);
-// const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: "*" } });
-// const io = new socketio.Server(httpServer, { cors: { origin: "*" } });
+// const httpServer = http.Server(app);
+const httpServer = createServer(app);
+// const io = new Server(httpServer, { cors: { origin: "*" } });
+const io = new socketio.Server(httpServer, { cors: { origin: "*" } });
 const users = [];
 
 io.on("connection", (socket) => {
