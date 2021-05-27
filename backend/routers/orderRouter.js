@@ -131,7 +131,7 @@ orderRouter.put(
   "/:id/pay",
   isAuth,
   expressAsyncHandler(async (request, response) => {
-    const order = await await Order.findById(request.params.id).populate(
+    const order = await Order.findById(request.params.id).populate(
       "user",
       "email name"
     );

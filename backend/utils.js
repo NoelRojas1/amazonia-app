@@ -67,9 +67,7 @@ export const isSellerOrAdmin = (request, response, next) => {
 
 export const mailgun = () =>
   mg({
-    // apiKey: process.env.MAILGUN_API_KEY,
-    apiKey: "77bcacfd2ecaa3131cf95f2caee16114-fa6e84b7-1ecfb38c",
-    // apiKey: process.env.MAILGUN_API_KEY,
+    apiKey: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_DOMAIN,
   });
 
