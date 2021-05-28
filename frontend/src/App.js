@@ -143,9 +143,9 @@ function App() {
                   <li>
                     <Link to="/userlist">Users</Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to="/support">Supoprt</Link>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             )}
@@ -284,7 +284,7 @@ function App() {
           ></SellerRoute>
         </main>
         <footer className="row center">
-          {userInfo && !userInfo.isAdmin && <ChatBox userInfo={userInfo} />}
+          {/* {userInfo && !userInfo.isAdmin && <ChatBox userInfo={userInfo} />} */}
           <div>
             <p>All rights reserved.</p>
           </div>
