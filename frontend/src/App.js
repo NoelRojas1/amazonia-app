@@ -30,7 +30,7 @@ import MessageBox from "./components/MessageBox";
 import MapWindow from "./windows/MapWindow";
 import DashboardWindow from "./windows/DashboardWindow";
 import SupportWindow from "./windows/SupportWindow";
-import ChatBox from "./components/ChatBox";
+// import ChatBox from "./components/ChatBox";
 
 function App() {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);

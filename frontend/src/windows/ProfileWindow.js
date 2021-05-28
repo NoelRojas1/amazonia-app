@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Axios from "../../node_modules/axios/index";
 import { detailsUser, updateUserProfile } from "../actions/userActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -13,6 +14,8 @@ export default function ProfileWindow() {
   const [sellerName, setSellerName] = useState("");
   const [sellerLogo, setSellerLogo] = useState("");
   const [sellerDescription, setSellerDescription] = useState("");
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [errorUpload, setErrorUpload] = useState("");
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
@@ -41,7 +44,7 @@ export default function ProfileWindow() {
         setSellerDescription(user.seller.description);
       }
     }
-  }, [dispatch, userInfo._id, user]);
+  }, [dispatch, userInfo._id, user, sellerLogo]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -65,6 +68,28 @@ export default function ProfileWindow() {
       document.getElementById("password").placeholder = "Enter Password";
       document.getElementById("confirmPassword").placeholder =
         "Confirm Password";
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    //TODO: Send request to backend to upload a file
+    const file = e.target.files[0];
+    const bodyFormData = new FormData();
+    bodyFormData.append("image", file);
+    setLoadingUpload(true);
+
+    try {
+      const { data } = await Axios.post("/api/uploads", bodyFormData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      setSellerLogo(data);
+      setLoadingUpload(false);
+    } catch (error) {
+      setErrorUpload(error.message);
+      setLoadingUpload(false);
     }
   };
 
@@ -147,6 +172,19 @@ export default function ProfileWindow() {
                     value={sellerLogo}
                     onChange={(e) => setSellerLogo(e.target.value)}
                   ></input>
+                </div>
+                <div>
+                  <label htmlFor="imageFile">Seller Logo</label>
+                  <input
+                    type="file"
+                    id="imageFile"
+                    placeholder="Choose Image"
+                    onChange={uploadFileHandler}
+                  ></input>
+                  {loadingUpload && <LoadingBox></LoadingBox>}
+                  {errorUpload && (
+                    <MessageBox variant="danger">{errorUpload}</MessageBox>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="sellerDescription">Seller Description</label>
